@@ -1,27 +1,107 @@
-import './App.css'
-import { useState } from 'react';
-import ContactList from './components/ContactList'
-import SelectedContact from './components/SelectedContact'
-
-
-/*Initialize a state variable, selectedContactId, with a default value of null.
-- Define a function, handleContactClick, that takes an ID and sets selectedContactId to that ID.
-- Conditionally render ContactList or SelectedContact based on whether selectedContactId is null or not.
-- Pass handleContactClick and selectedContactId to ContactList and SelectedContact via props.
-*/
-
-
+import { useState, useEffect } from 'react';
+import OnboardingWsfax from './components/OnboardingWsfax';
 
 function App() {
-  const [selectedContactId, setSelectedContactId] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const [position, setPosition] = useState('');
+  const [location, setLocation] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [onboardingTemplate, setOnboardingTemplate] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleOnboarding = () => {
+    const [firstName, lastName] = fullName.toLowerCase().split(' ');
+    const domain = location.toLowerCase().startsWith('p') ? '@praxistreatment.com' : '@landmarkrecovery.com';
+    const email = `${firstName}.${lastName}${domain}`;
+    const sfaxLogin = `${firstName}.${lastName}`;
+    const password = `${firstName.slice(0, 2).charAt(0).toUpperCase()}${firstName.slice(1, 2)}${lastName.slice(0, 4)}2023!`;
+
+    setEmail(email);
+    setPassword(password);
+
+    const template = (
+      <OnboardingWsfax
+        fullName={fullName}
+        position={position}
+        location={location}
+        email={email}
+        sfaxLogin={sfaxLogin}
+        password={password}
+      />
+    );
+
+    setOnboardingTemplate(template);
+  };
+
+const handleCopy = () => {
+  const onboardingText = `
+    Hello,
+
+    Full Name: ${fullName}
+    Position: ${position}
+    Location: ${location}
+
+    Office 365 URL: it.landmarkrecovery.com
+    Login: ${email}
+    Password: ${password}
+
+    Sunwave EMR URL: https://emr.sunwavehealth.com/SunwaveEMR/SunwaveClient/build/web/firsttabs.html#
+    Login: ${email}
+    Password: E-mail invitation sent
+
+    HIPAA Compliance URL: https://compliance.hipaasecurenow.com/
+    Login: ${email}
+    Password: Landmark Account Password
+
+    Sfax URL: https://app.sfaxme.com/appLogin.aspx?ReturnUrl=%2fsettingsUsers.aspx
+    Login: ${sfaxLogin}
+    Password: E-mail invitation sent to work e-mail.
+
+    Has been successfully onboarded.
+
+    Thank you!
+  `;
+
+  // Create a new textarea element and set its value to the onboarding text
+  const textarea = document.createElement('textarea');
+  textarea.value = onboardingText;
+  document.body.appendChild(textarea);
+
+  // Select the onboarding text
+  textarea.select();
+
+  // Copy the onboarding text to the clipboard
+  document.execCommand('copy');
+
+  // Remove the textarea element from the DOM
+  document.body.removeChild(textarea);
+
+  setCopied(true);
+};
+
+  
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
 
   return (
-    <>
-      {selectedContactId ? (<SelectedContact selectedContactId={selectedContactId} setSelectedContactId={setSelectedContactId} />
-      ) : (
-        <ContactList setSelectedContactId={setSelectedContactId} />
-      )}
-    </>
-  )
+    <div>
+      <input type="text" placeholder="Full Name" value={fullName} onChange={e => setFullName(e.target.value)} />
+      <input type="text" placeholder="Position" value={position} onChange={e => setPosition(e.target.value)} />
+      <input type="text" placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} />
+      <button onClick={handleOnboarding}>Generate Onboarding Template</button>
+      {onboardingTemplate}
+      {onboardingTemplate && <button onClick={handleCopy}>Copy to Clipboard</button>}
+      {copied && <div>Copied to Clipboard</div>}
+    </div>
+  );
 }
-export default App
+
+export default App;

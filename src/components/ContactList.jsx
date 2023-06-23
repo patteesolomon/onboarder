@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ContactRow from './ContactRow';
+import * as XLSX from 'xlsx';
 
 
 
@@ -15,14 +16,39 @@ const dummyContacts = [
 
     useEffect(() => {
       async function fetchContacts() {
-        try{
-          const response = await fetch("https://fsa-jsonplaceholder-69b5c48f1259.herokuapp.com/users");
-          const data = await response.json();
-          setContacts(data);
+        try {
+          /* Load the onboarding_template.xlsx file */
+          const response = await fetch('/onboarding_template.xlsx');
+          const arrayBuffer = await response.arrayBuffer();
+  
+          /* Parse the file */
+          const data = new Uint8Array(arrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+  
+          /* Get the first worksheet (you can modify this to choose the worksheet based on the job title) */
+          const firstWorksheet = workbook.Sheets[workbook.SheetNames[0]];
+  
+          /* Convert the worksheet to JSON */
+          const jsonData = XLSX.utils.sheet_to_json(firstWorksheet, { header: 1 });
+  
+          /* Assume that the first row is the header and the rest are the data */
+          const [header, ...rows] = jsonData;
+  
+          /* Convert the rows to objects */
+          const contacts = rows.map(row => {
+            let contact = {};
+            row.forEach((cell, i) => {
+              contact[header[i]] = cell;
+            });
+            return contact;
+          });
+  
+          setContacts(contacts);
         } catch(error) {
           console.log(error);
         }
       }
+  
       fetchContacts();
     }, []);
   return (
