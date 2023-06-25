@@ -1,5 +1,6 @@
-export default function OnboardingWsfax({ fullName, position, location, email, sfaxLogin, password }) {
-  // ...
+export default function OnboardingWsfax({ state }) {
+  const { fullName, position, location, email, sfaxLogin, password } = state;
+
   return (
     <pre>
       {`

@@ -1,105 +1,70 @@
-import { useState, useEffect } from 'react';
+// App.jsx
+import { useState } from 'react';
 import OnboardingWsfax from './components/OnboardingWsfax';
+import { handleOnboarding, handleCopy } from './utils/onboardingUtils.js';
+import './App.css';
 
 function App() {
-  const [fullName, setFullName] = useState('');
-  const [position, setPosition] = useState('');
-  const [location, setLocation] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [state, setState] = useState({
+    fullName: '',
+    position: '',
+    location: '',
+    email: '',
+    password: '',
+    sfaxLogin: '',
+  });
   const [onboardingTemplate, setOnboardingTemplate] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const handleOnboarding = () => {
-    const [firstName, lastName] = fullName.toLowerCase().split(' ');
-    const domain = location.toLowerCase().startsWith('p') ? '@praxistreatment.com' : '@landmarkrecovery.com';
-    const email = `${firstName}.${lastName}${domain}`;
-    const sfaxLogin = `${firstName}.${lastName}`;
-    const password = `${firstName.slice(0, 2).charAt(0).toUpperCase()}${firstName.slice(1, 2)}${lastName.slice(0, 4)}2023!`;
-
-    setEmail(email);
-    setPassword(password);
-
-    const template = (
+  const handleGenerateOnboarding = () => {
+    const { email, sfaxLogin, password } = handleOnboarding(state.fullName, state.position, state.location);
+    const newState = {
+      ...state,
+      email,
+      password,
+      sfaxLogin,
+    };
+    setState(newState);
+  
+    const sfaxtemplate = (
       <OnboardingWsfax
-        fullName={fullName}
-        position={position}
-        location={location}
-        email={email}
-        sfaxLogin={sfaxLogin}
-        password={password}
+        state={newState}
       />
     );
-
-    setOnboardingTemplate(template);
+  
+    setOnboardingTemplate(sfaxtemplate);
   };
 
-const handleCopy = () => {
-  const onboardingText = `
-    Hello,
-
-    Full Name: ${fullName}
-    Position: ${position}
-    Location: ${location}
-
-    Office 365 URL: it.landmarkrecovery.com
-    Login: ${email}
-    Password: ${password}
-
-    Sunwave EMR URL: https://emr.sunwavehealth.com/SunwaveEMR/SunwaveClient/build/web/firsttabs.html#
-    Login: ${email}
-    Password: E-mail invitation sent
-
-    HIPAA Compliance URL: https://compliance.hipaasecurenow.com/
-    Login: ${email}
-    Password: Landmark Account Password
-
-    Sfax URL: https://app.sfaxme.com/appLogin.aspx?ReturnUrl=%2fsettingsUsers.aspx
-    Login: ${sfaxLogin}
-    Password: E-mail invitation sent to work e-mail.
-
-    Has been successfully onboarded.
-
-    Thank you!
-  `;
-
-  // Create a new textarea element and set its value to the onboarding text
-  const textarea = document.createElement('textarea');
-  textarea.value = onboardingText;
-  document.body.appendChild(textarea);
-
-  // Select the onboarding text
-  textarea.select();
-
-  // Copy the onboarding text to the clipboard
-  document.execCommand('copy');
-
-  // Remove the textarea element from the DOM
-  document.body.removeChild(textarea);
-
-  setCopied(true);
-};
-
-  
-
-  useEffect(() => {
+  const handleCopyToClipboard = () => {
+    const copied = handleCopy(state.fullName, state.position, state.location, state.email, state.sfaxLogin, state.password);
     if (copied) {
-      const timer = setTimeout(() => {
-        setCopied(false);
-      }, 3000);
-      return () => clearTimeout(timer);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
     }
-  }, [copied]);
+  };
+
+  const handleReset = () => {
+    setState({
+      fullName: '',
+      position: '',
+      location: '',
+      email: '',
+      password: '',
+      sfaxLogin: '',
+    });
+    setOnboardingTemplate(null);
+  };
 
   return (
     <div>
-      <input type="text" placeholder="Full Name" value={fullName} onChange={e => setFullName(e.target.value)} />
-      <input type="text" placeholder="Position" value={position} onChange={e => setPosition(e.target.value)} />
-      <input type="text" placeholder="Location" value={location} onChange={e => setLocation(e.target.value)} />
-      <button onClick={handleOnboarding}>Generate Onboarding Template</button>
+      <input type="text" placeholder="Full Name" value={state.fullName} onChange={e => setState(prevState => ({ ...prevState, fullName: e.target.value }))} />
+      <input type="text" placeholder="Position" value={state.position} onChange={e => setState(prevState => ({ ...prevState, position: e.target.value }))} />
+      <input type="text" placeholder="Location" value={state.location} onChange={e => setState(prevState => ({ ...prevState, location: e.target.value }))} />
+      <button onClick={handleGenerateOnboarding}>Generate Onboarding Template</button>
       {onboardingTemplate}
-      {onboardingTemplate && <button onClick={handleCopy}>Copy to Clipboard</button>}
-      {copied && <div>Copied to Clipboard</div>}
+      {onboardingTemplate && <button onClick={handleCopyToClipboard}>Copy to Clipboard</button>}
+      {onboardingTemplate && <button onClick={handleReset}>Reset</button>}
+      {copied && <div>Copied to Clipboard!</div>}
     </div>
   );
 }
