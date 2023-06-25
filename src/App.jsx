@@ -4,6 +4,7 @@ import {handleReset, handleCopyToClipboard } from './utils/buttonUtils.js';
 import OnboardingWsfax from "./components/OnboardingWsfax";
 import BasicOnboarding from "./components/BasicOnboarding";
 import AcOnboarding from './components/AcOnboarding.jsx';
+import UrOnboarding from './components/UrOnboarding.jsx';
 import positions from './data/positions.js';
 import './App.css';
 
@@ -46,6 +47,9 @@ function App() {
       } else if (templateType === 'ac') {
         const acTemplate = <AcOnboarding state={newState} />;
         setOnboardingTemplate(acTemplate);
+      } else if (templateType === 'ur') {
+        const urTemplate = <UrOnboarding state={newState} />;
+        setOnboardingTemplate(urTemplate);
       } else {
         const basicTemplate = <BasicOnboarding state={newState} />;
         setOnboardingTemplate(basicTemplate);
@@ -70,6 +74,9 @@ function App() {
         />
       );
       setOnboardingTemplate(acTemplate);
+    } else if (templateType === 'ur') {
+      const urTemplate = <UrOnboarding state={newState} />;
+      setOnboardingTemplate(urTemplate);
     } else if (templateType === 'sfax') {
       const sfaxtemplate = (
         <OnboardingWsfax
@@ -115,9 +122,9 @@ function App() {
       </>)}
 
       {onboardingTemplate}
-      {onboardingTemplate && <button onClick={copyToClipboard}>Copy to Clipboard</button>}
+      {onboardingTemplate && <button onClick={copyToClipboard}>Copy Template</button>}
       {errorMessage && <div className="error-message bouncing-text">{errorMessage}</div>}
-      {onboardingTemplate && <button onClick={reset}>Reset</button>}
+      {onboardingTemplate && <button onClick={reset}>Refresh Template</button>}
       {copied && <div className = "make-red">Copied to Clipboard!</div>}
     </div>
 

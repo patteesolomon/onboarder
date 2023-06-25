@@ -21,30 +21,37 @@ export const handleOnboarding = (fullName, position, location) => {
     return password;
 }
 
-  export const handleGenerateOnboarding = (state) => {
-    const { email, sfaxLogin, password, availityLogin, availityPassword  } = handleOnboarding(state.fullName, state.position, state.location);
-    const newState = {
-      ...state,
-      email,
-      password,
-      sfaxLogin,
-      availityLogin,
-      availityPassword,
-    };
-    
-
+export const handleGenerateOnboarding = (state) => {
+  const { email, sfaxLogin, password, availityLogin, availityPassword  } = handleOnboarding(state.fullName, state.position, state.location);
+  const newState = {
+    ...state,
+    email,
+    password,
+    sfaxLogin,
+    availityLogin,
+    availityPassword,
+  };
 
   // Find the selected position in the positions array
   const selectedPosition = positions.find(pos => pos.Position === state.position);
-  // Check if SFAX is true in the Software object of the selected position
-  if (selectedPosition && selectedPosition.Software.SFAX) {
-    return { newState, templateType: 'sfax' };
-  } else if (selectedPosition && selectedPosition.Software.Availity && selectedPosition.Software["Call Tracking Metrics"]) {
+  
+  // Check if both Availity and Call Tracking Metrics are true in the Software object of the selected position
+  if (selectedPosition && selectedPosition.Software.Availity && selectedPosition.Software["Call Tracking Metrics"]) {
     return { newState, templateType: 'ac' };
+  } 
+  // Check if SFAX and Availity are true in the Software object of the selected position
+  else if (selectedPosition && selectedPosition.Software.SFAX && selectedPosition.Software.Availity) {
+    return { newState, templateType: 'ur' };
+  }
+  // Check if SFAX is true in the Software object of the selected position
+  else if (selectedPosition && selectedPosition.Software.SFAX) {
+    return { newState, templateType: 'sfax' };
   } else {
     return { newState, templateType: 'basic' };
   }
 }
+
+
 
 
 export const getTemplateType = (state) => {
