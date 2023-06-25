@@ -1,5 +1,5 @@
 export default function AcOnboarding({ state }) {
-    const { fullName, position, location, email, password } = state;
+    const { fullName, position, location, email, password, availityLogin, availityPassword } = state;
   
     return (
       <pre>
@@ -27,8 +27,8 @@ export default function AcOnboarding({ state }) {
           Password:	E-mail invitation sent to work e-mail
           
           Availity URL:	https://apps.availity.com/availity/web/public.elegant.login
-          Login:	
-          Password:	
+          Login: ${availityLogin}
+          Password: ${availityPassword}
 
           Has been successfully onboarded.
   

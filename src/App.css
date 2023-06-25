@@ -4,18 +4,81 @@
   padding: 2rem;
   text-align: center;
   background-color: #333;
-  border-radius: 5px;
+  border-radius: 15px;
   color: #f0f0f0;
   font-family: Arial, sans-serif;
+  
+}
+
+@keyframes bounce {
+  0% { top: 0; left: 0; }
+  25% { top: 0; left: 70%; }
+  50% { top: 70%; left: 70%; }
+  75% { top: 70%; left: 0; }
+  100% { top: 0; left: 0; }
+}
+
+
+.bouncing-text {
+  position: absolute;
+  animation: bounce 5s infinite;
 }
 
 .first-render{
-  display: flex; 
+  display: flex;
+  position: relative; 
   flex-direction: column;
   align-items: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .first-render button{
   margin-top: 5%;
+  position: relative;
   
+}
+
+.first-render input{
+  margin-left: 8%;
+}
+
+.make-red{
+  color: red;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px;
+  z-index: 1000; 
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.suggestions{
+  position: absolute;
+  left: 105%; 
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 1%;
+  top: -4%;
+}
+
+
+.suggestion {
+  border: 2px solid #df3838; 
+  border-radius: 5px;
+  padding: 10px;
+
+}
+
+
+.suggestions-unshifted {
+  left: 120%;
+  top: -300%;
 }
