@@ -8,3 +8,14 @@
   color: #f0f0f0;
   font-family: Arial, sans-serif;
 }
+
+.first-render{
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+}
+
+.first-render button{
+  margin-top: 5%;
+  
+}

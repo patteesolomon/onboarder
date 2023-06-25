@@ -1,4 +1,6 @@
-export function handleOnboarding(fullName, position, location) {
+import positions from "../data/positions";
+
+export const handleOnboarding = (fullName, position, location) => {
     const [firstName, lastName] = fullName.toLowerCase().split(' ');
     const domain = location.toLowerCase().startsWith('p') ? '@praxistreatment.com' : '@landmarkrecovery.com';
     const email = `${firstName}.${lastName}${domain}`;
@@ -6,8 +8,32 @@ export function handleOnboarding(fullName, position, location) {
     const password = `${firstName.slice(0, 2).charAt(0).toUpperCase()}${firstName.slice(1, 2)}${lastName.slice(0, 4)}2023!`;
   
     return { email, sfaxLogin, password };
-  }
+  };
   
+
+  export const handleGenerateOnboarding = (state) => {
+    const { email, sfaxLogin, password } = handleOnboarding(state.fullName, state.position, state.location);
+    const newState = {
+      ...state,
+      email,
+      password,
+      sfaxLogin,
+    };
+
+  // Find the selected position in the positions array
+  const selectedPosition = positions.find(pos => pos.Position === state.position);
+  // Check if SFAX is true in the Software object of the selected position
+  if (selectedPosition && selectedPosition.Software.SFAX) {
+    return { newState, templateType: 'sfax' };
+  } else {
+    return { newState, templateType: 'basic' };
+  }
+};
+
+
+
+
+
 export function handleCopy(fullName, position, location, email, sfaxLogin, password) {
     const onboardingText = `
       Hello,
