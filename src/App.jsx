@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import {handleGenerateOnboarding, handleCopy, updateSuggestions} from './utils/onboardingUtils.js';
+import { useState, useEffect } from 'react';
+import {handleGenerateOnboarding, handleCopy, updateSuggestions, getUserDomain} from './utils/onboardingUtils.js';
 import {handleReset, handleCopyToClipboard } from './utils/buttonUtils.js';
 import OnboardingWsfax from "./components/OnboardingWsfax";
 import BasicOnboarding from "./components/BasicOnboarding";
@@ -24,7 +24,11 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const copyToClipboard = () => handleCopyToClipboard(handleCopy, setCopied,state);
   const [suggestions, setSuggestions] = useState([]);
+  const [userDomain, setUserDomain] = useState('');
 
+  useEffect(() => {
+    setUserDomain(getUserDomain(state.email));
+  }, [state.email]);
 
 
   
@@ -84,6 +88,10 @@ function App() {
   }
   return (
     <div className = "first-render">
+      <div className="domain-image">
+        {userDomain === 'praxis' && <img className = "praxis-png" src="src/assets/praxis.PNG" alt="Praxis" />}
+        {userDomain === 'landmark' && <img className = "landmark-png" src="src/assets/landmarkrecovery.PNG" alt="Landmark" />}
+        </div>
       <input type="text" placeholder="Full Name" value={state.fullName} onChange={e => setState(prevState => ({ ...prevState, fullName: e.target.value }))} />
       <input type="text" placeholder="Position" value={state.position} onChange={e => updateSuggestions(e, setState, setSuggestions)} />
       { suggestions.length > 0 && (
@@ -112,7 +120,7 @@ function App() {
       {onboardingTemplate && <button onClick={reset}>Reset</button>}
       {copied && <div className = "make-red">Copied to Clipboard!</div>}
     </div>
-    
+
   );
 }
 

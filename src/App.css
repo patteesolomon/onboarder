@@ -67,7 +67,9 @@
   grid-template-columns: repeat(4, 1fr); 
   gap: 1%;
   top: -4%;
+  flex-direction: column;
 }
+
 
 
 .suggestion {
@@ -80,5 +82,11 @@
 
 .suggestions-unshifted {
   left: 120%;
-  top: -300%;
+  top: -350%;
+}
+
+.domain-image {
+  position: absolute;
+  top: 0;
+  right: 0;
 }

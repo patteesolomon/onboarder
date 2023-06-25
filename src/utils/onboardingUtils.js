@@ -117,3 +117,13 @@ export function handleCopy(fullName, position, location, email, sfaxLogin, passw
       setSuggestions([]);
     }
   };
+
+  export const getUserDomain = (email) => {
+    if (email.includes('@praxistreatment.com')) {
+      return 'praxis';
+    } else if (email.includes('@landmarkrecovery.com')) {
+      return 'landmark';
+    } else {
+      return '';
+    }
+  };

@@ -1,5 +1,5 @@
 export default function IccOnboarding({ state }) {
-    const { fullName, position, location, email, password } = state;
+    const { fullName, position, location, email, password, sfaxLogin, availityLogin, availityPassword } = state;
   
     return (
       <pre>
@@ -22,6 +22,26 @@ export default function IccOnboarding({ state }) {
           Login: ${email}
           Password: Landmark Account Password
 
+          Sfax URL: https://app.sfaxme.com/appLogin.aspx?ReturnUrl=%2fsettingsUsers.aspx
+          Login: ${sfaxLogin}
+          Password: E-mail invitation sent to work e-mail.
+
+          Availity URL:	https://apps.availity.com/availity/web/public.elegant.login
+          Login: ${availityLogin}
+          Password: ${availityPassword}
+
+          Call Tracking Metrics URL:	https://app.calltrackingmetrics.com/login
+          Login: ${email}
+          Password:	E-mail invitation sent to work e-mail
+
+          VerifyTX URL:	https://app.verifytx.com/login
+          Login: ${email}
+          Password:	E-mail invitation sent to work e-mail
+
+          Waystar URL:	https://login.zirmed.com/ui
+          Login:	
+          Password:	
+          
           Has been successfully onboarded.
   
           Thank you!
