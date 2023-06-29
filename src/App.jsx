@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {handleGenerateOnboarding, handleCopy, updateSuggestions, getUserDomain} from './utils/onboardingUtils.js';
 import {handleReset, handleCopyToClipboard } from './utils/buttonUtils.js';
+import GoToTemp from './components/GoToTemp.jsx';
 import OnboardingWsfax from "./components/OnboardingWsfax";
 import BasicOnboarding from "./components/BasicOnboarding";
 import AcOnboarding from './components/AcOnboarding.jsx';
@@ -22,11 +23,13 @@ function App() {
     sfaxLogin: '',
     availityLogin: '',
     availityPassword: '',
+    extension: '',
+    phoneNumber: '',
   });
   const [onboardingTemplate, setOnboardingTemplate] = useState(null);
   const [copied, setCopied] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const copyToClipboard = () => handleCopyToClipboard(handleCopy, setCopied,state);
+  const copyToClipboard = () => handleCopyToClipboard(handleCopy, setCopied, state);
   const [suggestions, setSuggestions] = useState([]);
   const [userDomain, setUserDomain] = useState('');
 
@@ -47,19 +50,36 @@ function App() {
         templateType,
       });  
       setErrorMessage(null); // Clear the error message when the form is successfully submitted
+  
+      // Find the selected position in the positions array
+      const selectedPosition = positions.find(pos => pos.Position === state.position);
+        
+      let TemplateComponent = null; // The component that will be rendered
+      let templateArgs = { state: newState }; // Arguments to be passed to the component
+  
       if (templateType === 'sfax') {
-        const sfaxtemplate = <OnboardingWsfax state={newState} />;
-        setOnboardingTemplate(sfaxtemplate);
+        TemplateComponent = OnboardingWsfax;
       } else if (templateType === 'ac') {
-        const acTemplate = <AcOnboarding state={newState} />;
-        setOnboardingTemplate(acTemplate);
+        TemplateComponent = AcOnboarding;
       } else if (templateType === 'ur') {
-        const urTemplate = <UrOnboarding state={newState} />;
-        setOnboardingTemplate(urTemplate);
+        TemplateComponent = UrOnboarding;
       } else {
-        const basicTemplate = <BasicOnboarding state={newState} />;
-        setOnboardingTemplate(basicTemplate);
+        TemplateComponent = BasicOnboarding;
       }
+  
+      let FinalComponent = TemplateComponent; // Start with FinalComponent as TemplateComponent
+  
+      // If the selected position requires GoToConnect, append the GoToTemp component to the template
+      if (selectedPosition && selectedPosition.Software.GoToConnect) {
+        FinalComponent = ({ state }) => (
+          <div>
+            <TemplateComponent state={state} />
+            <GoToTemp state={state} />
+          </div>
+        );
+      }
+  
+      setOnboardingTemplate(<FinalComponent {...templateArgs} />);
     }
   };
   
@@ -71,34 +91,35 @@ function App() {
   
     // Find the selected position in the positions array
     const selectedPosition = positions.find(pos => pos.Position === state.position);
-    
-    // Check if both Availity and Call Tracking Metrics are true in the Software object of the selected position
+      
+    let TemplateComponent = null; // The component that will be rendered
+    let templateArgs = { state: newState }; // Arguments to be passed to the component
+  
     if (selectedPosition && selectedPosition.Software.Availity && selectedPosition.Software["Call Tracking Metrics"]) {
-      const acTemplate = (
-        <AcOnboarding
-          state={newState}
-        />
-      );
-      setOnboardingTemplate(acTemplate);
+      TemplateComponent = AcOnboarding;
     } else if (templateType === 'ur') {
-      const urTemplate = <UrOnboarding state={newState} />;
-      setOnboardingTemplate(urTemplate);
+      TemplateComponent = UrOnboarding;
     } else if (templateType === 'sfax') {
-      const sfaxtemplate = (
-        <OnboardingWsfax
-          state={newState}
-        />
-      );
-      setOnboardingTemplate(sfaxtemplate);
+      TemplateComponent = OnboardingWsfax;
     } else {
-      const basicTemplate = (
-        <BasicOnboarding
-          state={newState}
-        />
-      );
-      setOnboardingTemplate(basicTemplate);
+      TemplateComponent = BasicOnboarding;
     }
-  }
+  
+    let FinalComponent = TemplateComponent; // Start with FinalComponent as TemplateComponent
+  
+    // If the selected position requires GoToConnect, append the GoToTemp component to the template
+    if (selectedPosition && selectedPosition.Software.GoToConnect) {
+      FinalComponent = ({ state }) => (
+        <div>
+          <TemplateComponent state={state} />
+          <GoToTemp state={state} />
+        </div>
+      );
+    }
+  
+    setOnboardingTemplate(<FinalComponent {...templateArgs} />);
+  };
+  
   return (
     <div className = "first-render">
       <div className="domain-image">

@@ -66,9 +66,40 @@ export const getTemplateType = (state) => {
   };
 
 
-  export function handleCopy(fullName, position, location, email, sfaxLogin, password, availityLogin, availityPassword, templateType) {
+  export const handleCopy = (
+    fullName, 
+    position, 
+    location, 
+    email, 
+    sfaxLogin, 
+    password, 
+    availityLogin, 
+    availityPassword, 
+    templateType, 
+    positionData,
+    extension,
+    phoneNumber
+  ) => {
     let onboardingText = '';
   
+    const goToText = `
+    ${fullName}, will need to install the GoTo app on their phone (published by GoTo Technologies) and look out for the welcome email here shortly. 
+    In that email, they'll need to click the "Get Started" button to finish setting up their account. 
+    In the app, they can sign in using their Office 365 credentials and can begin taking calls on the app.
+    I went ahead and set up the following number and extension:
+    
+    Extension: 
+    Phone Number: +1
+    Voicemail PIN: 0000
+    `
+    if (extension) {
+      copyText += "\nExtension: " + extension;
+    }
+  
+    if (phoneNumber) {
+      copyText += "\nPhone Number: " + phoneNumber;
+    }
+
     switch(templateType){
         case 'sfax':
             onboardingText = `
@@ -98,6 +129,9 @@ export const getTemplateType = (state) => {
     
             Thank you!
             `; 
+            if (positionData.Software.GoToConnect) {
+              onboardingText += goToText;
+            }
             break;
         case 'ac':
             onboardingText = `Hello,
@@ -129,6 +163,9 @@ export const getTemplateType = (state) => {
             Has been successfully onboarded.
     
             Thank you!`; 
+            if (positionData.Software.GoToConnect) {
+              onboardingText += goToText;
+            }
         case 'ur':
             onboardingText = `Hello,	
 	
@@ -159,8 +196,10 @@ export const getTemplateType = (state) => {
             Has been successfully onboarded.	
               
             Thank you!	
-            
-                   `; 
+            `;
+            if (positionData.Software.GoToConnect) {
+              onboardingText += goToText;
+            } 
             break;
         default:
             onboardingText = `          Hello,
@@ -184,6 +223,9 @@ export const getTemplateType = (state) => {
             Has been successfully onboarded.
     
             Thank you!`; 
+            if (positionData.Software.GoToConnect) {
+              onboardingText += goToText;
+            }
     }
   
     // Copy the onboarding text to the clipboard
