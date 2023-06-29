@@ -24,7 +24,7 @@ export const handleReset = (state) => {
 
   // Find the selected position in the positions array
   const selectedPosition = positions.find(pos => pos.Position === newState.position);
- 
+
   // Check if both Availity and Call Tracking Metrics are true in the Software object of the selected position
   if (selectedPosition && selectedPosition.Software.Availity && selectedPosition.Software["Call Tracking Metrics"]) {
       return { newState, templateType: 'ac' };

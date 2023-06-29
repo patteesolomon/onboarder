@@ -4,7 +4,7 @@ export default function GoToTemp({ state }) {
     return (
       <pre>
         {`
-        GoTo Template Here: "X" will need to 
+          GoTo Template Here: "X" will need to 
         `}
       </pre>
     );
