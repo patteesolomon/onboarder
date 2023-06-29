@@ -44,7 +44,7 @@ export const handleReset = (state) => {
 
   
 export const handleCopyToClipboard = (handleCopy, setCopied, state) => {
-    const copied = handleCopy(state.fullName, state.position, state.location, state.email, state.sfaxLogin, state.password);
+  const copied = handleCopy(state.fullName, state.position, state.location, state.email, state.sfaxLogin, state.password, state.availityLogin, state.availityPassword, state.templateType);
     if (copied) {
       setCopied(true);
       setTimeout(() => setCopied(false), 500);

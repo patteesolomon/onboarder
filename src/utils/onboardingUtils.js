@@ -66,52 +66,137 @@ export const getTemplateType = (state) => {
   };
 
 
-export function handleCopy(fullName, position, location, email, sfaxLogin, password) {
-    const onboardingText = `
-      Hello,
+  export function handleCopy(fullName, position, location, email, sfaxLogin, password, availityLogin, availityPassword, templateType) {
+    let onboardingText = '';
   
-      Full Name: ${fullName}
-      Position: ${position}
-      Location: ${location}
+    switch(templateType){
+        case 'sfax':
+            onboardingText = `
+            Hello,
+
+            Full Name: ${fullName}
+            Position: ${position}
+            Location: ${location}
+    
+            Office 365 URL: it.landmarkrecovery.com
+            Login: ${email}
+            Password: ${password}
+    
+            Sunwave EMR URL: https://emr.sunwavehealth.com/SunwaveEMR/SunwaveClient/build/web/firsttabs.html#
+            Login: ${email}
+            Password: E-mail invitation sent
+    
+            HIPAA Compliance URL: https://compliance.hipaasecurenow.com/
+            Login: ${email}
+            Password: Landmark Account Password
+    
+            Sfax URL: https://app.sfaxme.com/appLogin.aspx?ReturnUrl=%2fsettingsUsers.aspx
+            Login: ${sfaxLogin}
+            Password: E-mail invitation sent to work e-mail.
+    
+            Has been successfully onboarded.
+    
+            Thank you!
+            `; 
+            break;
+        case 'ac':
+            onboardingText = `Hello,
   
-      Office 365 URL: it.landmarkrecovery.com
-      Login: ${email}
-      Password: ${password}
+            Full Name: ${fullName}
+            Position: ${position}
+            Location: ${location}
+    
+            Office 365 URL: it.landmarkrecovery.com
+            Login: ${email}
+            Password: ${password}
+    
+            Sunwave EMR URL: https://emr.sunwavehealth.com/SunwaveEMR/SunwaveClient/build/web/firsttabs.html#
+            Login: ${email}
+            Password: E-mail invitation sent
+    
+            HIPAA Compliance URL: https://compliance.hipaasecurenow.com/
+            Login: ${email}
+            Password: Landmark Account Password
   
-      Sunwave EMR URL: https://emr.sunwavehealth.com/SunwaveEMR/SunwaveClient/build/web/firsttabs.html#
-      Login: ${email}
-      Password: E-mail invitation sent
+            Call Tracking Metrics URL:	https://app.calltrackingmetrics.com/login
+            Login: ${email}
+            Password:	E-mail invitation sent to work e-mail
+            
+            Availity URL:	https://apps.availity.com/availity/web/public.elegant.login
+            Login: ${availityLogin}
+            Password: ${availityPassword}
   
-      HIPAA Compliance URL: https://compliance.hipaasecurenow.com/
-      Login: ${email}
-      Password: Landmark Account Password
+            Has been successfully onboarded.
+    
+            Thank you!`; 
+        case 'ur':
+            onboardingText = `Hello,	
+	
+            Full Name:	${fullName}
+            Position: ${position}
+            Location:	${location}
+              
+            URL:	it.landmarkrecovery.com
+            Login:	${email}
+            Password: ${password}
+              
+            URL:	https://emr.sunwavehealth.com/
+            Login:	${email}
+            Password:	E-mail invitation sent to work e-mail
+              
+            URL:	https://compliance.hipaasecurenow.com/
+            Login:	${email}
+            Password:	Landmark Account Password
+              
+            URL:	https://app.sfaxme.com/appLogin.aspx?ReturnUrl=%2fsettingsUsers.aspx
+            Login:	${sfaxLogin}
+            Password:	E-mail invitation sent to work e-mail.
+              
+            URL:	https://apps.availity.com/availity/web/public.elegant.login
+            Login:	${availityLogin}
+            Password:	${availityPassword}
+              
+            Has been successfully onboarded.	
+              
+            Thank you!	
+            
+                   `; 
+            break;
+        default:
+            onboardingText = `          Hello,
   
-      Sfax URL: https://app.sfaxme.com/appLogin.aspx?ReturnUrl=%2fsettingsUsers.aspx
-      Login: ${sfaxLogin}
-      Password: E-mail invitation sent to work e-mail.
+            Full Name: ${fullName}
+            Position: ${position}
+            Location: ${location}
+    
+            Office 365 URL: it.landmarkrecovery.com
+            Login: ${email}
+            Password: ${password}
+    
+            Sunwave EMR URL: https://emr.sunwavehealth.com/SunwaveEMR/SunwaveClient/build/web/firsttabs.html#
+            Login: ${email}
+            Password: E-mail invitation sent
+    
+            HIPAA Compliance URL: https://compliance.hipaasecurenow.com/
+            Login: ${email}
+            Password: Landmark Account Password
   
-      Has been successfully onboarded.
-  
-      Thank you!
-    `;
-  
-    // Create a new textarea element and set its value to the onboarding text
-    const textarea = document.createElement('textarea');
-    textarea.value = onboardingText;
-    document.body.appendChild(textarea);
-  
-    // Select the onboarding text
-    textarea.select();
+            Has been successfully onboarded.
+    
+            Thank you!`; 
+    }
   
     // Copy the onboarding text to the clipboard
-    document.execCommand('copy');
-  
-    // Remove the textarea element from the DOM
-    document.body.removeChild(textarea);
+    navigator.clipboard.writeText(onboardingText)
+      .then(() => {
+        console.log('Onboarding text copied to clipboard');
+      })
+      .catch(err => {
+        console.error('Could not copy text: ', err);
+      });
   
     return true;
-  }
-  
+}
   export const updateSuggestions = (e, setState, setSuggestions) => {
     const value = e.target.value;
     setState(prevState => ({ ...prevState, position: value }));

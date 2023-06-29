@@ -5,6 +5,9 @@ import OnboardingWsfax from "./components/OnboardingWsfax";
 import BasicOnboarding from "./components/BasicOnboarding";
 import AcOnboarding from './components/AcOnboarding.jsx';
 import UrOnboarding from './components/UrOnboarding.jsx';
+import IccOnboarding from './components/IccOnboarding.jsx';
+import MiscOnboarding from './components/MiscOnboarding.jsx';
+
 import positions from './data/positions.js';
 import './App.css';
 
@@ -39,7 +42,10 @@ function App() {
       setErrorMessage("A field is missing!");
     } else {
       const { newState, templateType } = handleReset(state);
-      setState(newState);
+      setState({
+        ...newState,
+        templateType,
+      });  
       setErrorMessage(null); // Clear the error message when the form is successfully submitted
       if (templateType === 'sfax') {
         const sfaxtemplate = <OnboardingWsfax state={newState} />;
