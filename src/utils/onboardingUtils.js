@@ -5,7 +5,7 @@ export const handleOnboarding = (fullName, position, location) => {
     const domain = location.toLowerCase().startsWith('p') ? '@praxistreatment.com' : '@landmarkrecovery.com';
     const email = `${firstName}.${lastName}${domain}`;
     const sfaxLogin = `${firstName}.${lastName}`;
-    const password = `${firstName.slice(0, 2).charAt(0).toUpperCase()}${firstName.slice(1, 2)}${lastName.slice(0, 4)}2023!`;
+    const password = `${firstName.slice(0, 2).charAt(0).toUpperCase()}${firstName.slice(1, 2)}${lastName.slice(0, 3)}2023!`;
     const availityLogin = `${firstName}${lastName}`;
     const availityPassword = generateAvailityPassword();
   
