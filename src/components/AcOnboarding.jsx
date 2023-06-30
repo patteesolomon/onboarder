@@ -1,8 +1,30 @@
 export default function AcOnboarding({ state }) {
     const { fullName, position, location, email, password, availityLogin, availityPassword } = state;
   
+  const AccTemplateConditional = (state) => {
+    {
+      (state != undefined) ? 
+      (suggestions.length === 0) ? null : (
+        <ul>
+          {state.map((sug) => (
+            <>
+              Full Name: <li key={sug.id}>{fullName}</li>
+              <li key={sug.id}>{position}</li>
+              <li key={sug.id}>{location}</li>
+              <li key={sug.id}>{email}</li>
+              <li key={sug.id}>{password}</li>
+              <li key={sug.id}>{availityLogin}</li>
+              <li key={sug.id}>{availityPassword}</li>
+            </>
+          ))}
+        </ul>
+        )
+        : null
+    }
+  };
     return (
       <pre>
+        <AccTemplateConditional/>
         {`
           Hello,
   
@@ -33,7 +55,7 @@ export default function AcOnboarding({ state }) {
           Has been successfully onboarded.
   
           Thank you!
-        `}
+        `} 
       </pre>
     );
   }

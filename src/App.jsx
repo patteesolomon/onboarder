@@ -34,9 +34,6 @@ function App() {
     setUserDomain(getUserDomain(state.email));
   }, [state.email]);
 
-
-  
-
   const reset = () => {
     if (!state.fullName || !state.position || !state.location) {
       setErrorMessage("A field is missing!");
@@ -62,8 +59,6 @@ function App() {
       }
     }
   };
-  
-  
 
   const generateOnboarding = () => {
     const { newState, templateType } = handleGenerateOnboarding(state, setState, setOnboardingTemplate);
